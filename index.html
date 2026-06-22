@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>煌 -kira- | 和食・日本酒</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Noto+Sans+JP:wght@300;400&family=Noto+Serif+JP:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:   #0D0A05;
+      --gold:    #C8A96E;
+      --gold-lt: #E2C898;
+      --cream:   #F5EDD8;
+      --gray:    #6B6560;
+      --mid:     #2A2520;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--cream);
+      font-family: 'Noto Sans JP', sans-serif;
+      font-weight: 300;
+      line-height: 1.8;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; width: 100%; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.4rem 3rem;
+      background: linear-gradient(to bottom, rgba(13,10,5,.9) 0%, transparent 100%);
+    }
+    .nav-logo {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 1.5rem; letter-spacing: .15em;
+      color: var(--gold);
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 2.4rem; list-style: none; }
+    .nav-links a {
+      font-size: .75rem; letter-spacing: .25em; text-transform: uppercase;
+      color: var(--cream); text-decoration: none; opacity: .75;
+      transition: opacity .3s, color .3s;
+    }
+    .nav-links a:hover { opacity: 1; color: var(--gold); }
+    .nav-reserve {
+      font-size: .75rem; letter-spacing: .2em;
+      padding: .6rem 1.4rem;
+      border: 1px solid var(--gold);
+      color: var(--gold); text-decoration: none;
+      transition: background .3s, color .3s;
+    }
+    .nav-reserve:hover { background: var(--gold); color: var(--black); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative; height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse at 70% 40%, rgba(200,169,110,.08) 0%, transparent 60%),
+        radial-gradient(ellipse at 20% 80%, rgba(200,169,110,.05) 0%, transparent 50%),
+        var(--black);
+    }
+    /* 和紙テクスチャ風ノイズ */
+    .hero-bg::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
+      opacity: .5; pointer-events: none;
+    }
+
+    /* 箸ライン — シグネチャ */
+    .chopsticks {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+      width: 2px; height: 0;
+      background: var(--gold);
+      opacity: .18;
+      animation: chopGrow 2s cubic-bezier(.4,0,.2,1) .4s forwards;
+    }
+    .chopsticks::after {
+      content: '';
+      position: absolute; top: 0; left: 18px;
+      width: 2px; height: 0;
+      background: var(--gold);
+      opacity: 1;
+      animation: chopGrow 2s cubic-bezier(.4,0,.2,1) .65s forwards;
+    }
+    @keyframes chopGrow { to { height: 70vh; } }
+
+    .hero-content {
+      position: relative; z-index: 2;
+      text-align: center; padding: 0 1rem;
+    }
+    .hero-eyebrow {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic; font-size: 1rem; letter-spacing: .4em;
+      color: var(--gold); margin-bottom: 1.6rem;
+      opacity: 0; animation: fadeUp .8s ease 1s forwards;
+    }
+    .hero-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: clamp(3.5rem, 9vw, 7rem);
+      font-weight: 300; letter-spacing: .08em;
+      line-height: 1.1;
+      opacity: 0; animation: fadeUp .9s ease 1.15s forwards;
+    }
+    .hero-title span { color: var(--gold); }
+    .hero-subtitle {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1rem, 2vw, 1.3rem);
+      font-style: italic; letter-spacing: .15em;
+      color: rgba(245,237,216,.6); margin-top: 1rem;
+      opacity: 0; animation: fadeUp .8s ease 1.35s forwards;
+    }
+    .hero-scroll {
+      position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: .6rem;
+      opacity: 0; animation: fadeUp .8s ease 2s forwards;
+    }
+    .hero-scroll span {
+      font-size: .65rem; letter-spacing: .3em; color: var(--gray);
+    }
+    .scroll-line {
+      width: 1px; height: 50px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: .3; transform: scaleY(1); }
+      50%       { opacity: 1;  transform: scaleY(1.15); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      display: flex; align-items: center; gap: 1.2rem;
+      padding: 0 3rem; margin: 0 auto; max-width: 900px;
+    }
+    .divider-line { flex: 1; height: 1px; background: rgba(200,169,110,.2); }
+    .divider-kanji {
+      font-family: 'Noto Serif JP', serif;
+      color: var(--gold); font-size: .9rem; letter-spacing: .2em;
+    }
+
+    /* ── CONCEPT ── */
+    .concept {
+      padding: 8rem 3rem;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 6rem;
+      max-width: 1100px; margin: 0 auto;
+      align-items: center;
+    }
+    .concept-text .section-label {
+      font-size: .7rem; letter-spacing: .4em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 1.8rem;
+    }
+    .concept-text h2 {
+      font-family: 'Noto Serif JP', serif;
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 300; line-height: 1.5;
+      margin-bottom: 2rem;
+    }
+    .concept-text p {
+      color: rgba(245,237,216,.7);
+      font-size: .92rem; line-height: 2;
+      margin-bottom: 1.2rem;
+    }
+    .concept-visual {
+      position: relative;
+    }
+    .concept-img {
+      width: 100%; aspect-ratio: 4/5;
+      background:
+        linear-gradient(160deg, rgba(200,169,110,.15) 0%, rgba(13,10,5,0) 60%),
+        var(--mid);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .concept-img::before {
+      content: '器';
+      font-family: 'Noto Serif JP', serif;
+      font-size: 9rem; color: rgba(200,169,110,.06);
+      position: absolute;
+    }
+    .concept-img-inner {
+      display: flex; flex-direction: column; align-items: center; gap: 2rem;
+    }
+    .dish-icon {
+      width: 120px; height: 120px; border-radius: 50%;
+      border: 1px solid rgba(200,169,110,.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3rem;
+    }
+    .dish-label {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic; color: var(--gold); letter-spacing: .2em; font-size: .9rem;
+    }
+    .concept-accent {
+      position: absolute; top: -1.5rem; right: -1.5rem;
+      width: 80px; height: 80px;
+      border: 1px solid rgba(200,169,110,.2);
+    }
+    .concept-accent::after {
+      content: ''; position: absolute; top: 10px; left: 10px; right: -10px; bottom: -10px;
+      border: 1px solid rgba(200,169,110,.1);
+    }
+
+    /* ── MENU ── */
+    .menu-section {
+      padding: 6rem 3rem 8rem;
+      background: linear-gradient(to bottom, var(--black), var(--mid) 50%, var(--black));
+    }
+    .menu-section .section-header {
+      text-align: center; margin-bottom: 4rem;
+    }
+    .menu-section .section-label {
+      font-size: .7rem; letter-spacing: .4em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 1rem; display: block;
+    }
+    .menu-section h2 {
+      font-family: 'Noto Serif JP', serif;
+      font-size: clamp(2rem, 4vw, 3rem); font-weight: 300;
+    }
+
+    .menu-tabs {
+      display: flex; justify-content: center; gap: 0;
+      margin-bottom: 3rem; border-bottom: 1px solid rgba(200,169,110,.15);
+    }
+    .menu-tab {
+      padding: .8rem 2rem;
+      font-size: .78rem; letter-spacing: .25em;
+      color: var(--gray); background: none; border: none;
+      cursor: pointer; position: relative;
+      transition: color .3s;
+    }
+    .menu-tab.active, .menu-tab:hover { color: var(--gold); }
+    .menu-tab.active::after {
+      content: ''; position: absolute; bottom: -1px; left: 0; right: 0;
+      height: 1px; background: var(--gold);
+    }
+
+    .menu-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1px; max-width: 1100px; margin: 0 auto;
+      background: rgba(200,169,110,.08);
+    }
+    .menu-item {
+      background: var(--mid);
+      padding: 2.2rem 2.4rem;
+      display: flex; justify-content: space-between; align-items: start;
+      gap: 1rem;
+      transition: background .3s;
+    }
+    .menu-item:hover { background: #322D27; }
+    .menu-item-info { flex: 1; }
+    .menu-item-name {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 1.05rem; font-weight: 300;
+      margin-bottom: .4rem;
+    }
+    .menu-item-desc {
+      font-size: .78rem; color: var(--gray); line-height: 1.7;
+    }
+    .menu-item-price {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem; color: var(--gold);
+      white-space: nowrap; padding-top: .1rem;
+    }
+
+    /* ── SAKE / DRINKS ── */
+    .sake-section {
+      padding: 7rem 3rem;
+      display: flex; align-items: center; gap: 6rem;
+      max-width: 1100px; margin: 0 auto;
+    }
+    .sake-visual {
+      flex: 0 0 320px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+      background: rgba(200,169,110,.1);
+    }
+    .sake-cell {
+      background: var(--mid);
+      padding: 2rem 1.5rem;
+      text-align: center;
+    }
+    .sake-cell .emoji { font-size: 2rem; margin-bottom: .8rem; display: block; }
+    .sake-cell .name {
+      font-family: 'Noto Serif JP', serif;
+      font-size: .85rem; color: var(--cream);
+    }
+    .sake-cell .origin {
+      font-size: .7rem; color: var(--gray); margin-top: .3rem;
+    }
+    .sake-text .section-label {
+      font-size: .7rem; letter-spacing: .4em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 1.8rem; display: block;
+    }
+    .sake-text h2 {
+      font-family: 'Noto Serif JP', serif;
+      font-size: clamp(1.8rem, 3.5vw, 2.6rem); font-weight: 300;
+      margin-bottom: 1.5rem; line-height: 1.5;
+    }
+    .sake-text p {
+      color: rgba(245,237,216,.7);
+      font-size: .92rem; line-height: 2; margin-bottom: 1.2rem;
+    }
+
+    /* ── ACCESS ── */
+    .access-section {
+      padding: 7rem 3rem;
+      background: var(--mid);
+    }
+    .access-inner {
+      max-width: 900px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;
+      align-items: start;
+    }
+    .access-text .section-label {
+      font-size: .7rem; letter-spacing: .4em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 1.8rem; display: block;
+    }
+    .access-text h2 {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 2rem; font-weight: 300; margin-bottom: 2rem;
+    }
+    .access-info dt {
+      font-size: .7rem; letter-spacing: .25em; color: var(--gold);
+      margin-top: 1.4rem; margin-bottom: .4rem;
+    }
+    .access-info dd { font-size: .9rem; color: rgba(245,237,216,.75); }
+    .access-map {
+      background: var(--black);
+      aspect-ratio: 1;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid rgba(200,169,110,.15);
+      position: relative; overflow: hidden;
+    }
+    .map-placeholder {
+      text-align: center; z-index: 2;
+    }
+    .map-placeholder .pin { font-size: 2.5rem; }
+    .map-placeholder p {
+      font-size: .75rem; color: var(--gray); margin-top: .6rem; letter-spacing: .1em;
+    }
+    .map-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(200,169,110,.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(200,169,110,.05) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    /* ── RESERVE ── */
+    .reserve-section {
+      padding: 8rem 3rem;
+      text-align: center;
+      background: var(--black);
+    }
+    .reserve-section .eyebrow {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic; letter-spacing: .3em;
+      color: var(--gold); margin-bottom: 1.5rem;
+    }
+    .reserve-section h2 {
+      font-family: 'Noto Serif JP', serif;
+      font-size: clamp(2rem, 4vw, 3rem); font-weight: 300;
+      margin-bottom: 1rem;
+    }
+    .reserve-section p {
+      color: rgba(245,237,216,.6); margin-bottom: 3rem;
+      font-size: .9rem; letter-spacing: .05em;
+    }
+    .reserve-btn {
+      display: inline-block;
+      padding: 1.1rem 3.5rem;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-size: .8rem; letter-spacing: .3em; text-transform: uppercase;
+      text-decoration: none;
+      transition: background .35s, color .35s;
+    }
+    .reserve-btn:hover { background: var(--gold); color: var(--black); }
+    .reserve-tel {
+      margin-top: 2rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem; letter-spacing: .2em; color: rgba(245,237,216,.5);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 3rem;
+      border-top: 1px solid rgba(200,169,110,.1);
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 1.5rem;
+    }
+    .footer-logo {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 1.3rem; color: var(--gold); letter-spacing: .15em;
+    }
+    .footer-links {
+      display: flex; gap: 2rem; list-style: none;
+    }
+    .footer-links a {
+      font-size: .7rem; letter-spacing: .2em; color: var(--gray);
+      text-decoration: none; transition: color .3s;
+    }
+    .footer-links a:hover { color: var(--gold); }
+    .footer-copy { font-size: .7rem; color: var(--gray); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 1.2rem 1.5rem; }
+      .nav-links { display: none; }
+      .concept { grid-template-columns: 1fr; gap: 3rem; padding: 5rem 1.5rem; }
+      .sake-section { flex-direction: column; padding: 5rem 1.5rem; }
+      .sake-visual { flex: none; width: 100%; }
+      .access-inner { grid-template-columns: 1fr; padding: 0; }
+      .access-section { padding: 5rem 1.5rem; }
+      .menu-section { padding: 5rem 1.5rem; }
+      .reserve-section { padding: 5rem 1.5rem; }
+      footer { flex-direction: column; align-items: flex-start; padding: 2rem 1.5rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .chopsticks, .chopsticks::after,
+      .hero-eyebrow, .hero-title, .hero-subtitle, .hero-scroll,
+      .scroll-line { animation: none; opacity: 1; height: 70vh; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">煌</a>
+  <ul class="nav-links">
+    <li><a href="#concept">コンセプト</a></li>
+    <li><a href="#menu">メニュー</a></li>
+    <li><a href="#sake">酒</a></li>
+    <li><a href="#access">アクセス</a></li>
+  </ul>
+  <a href="#reserve" class="nav-reserve">ご予約</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="chopsticks"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Japanese Dining &amp; Sake Bar</p>
+    <h1 class="hero-title"><span>煌</span><br>kira</h1>
+    <p class="hero-subtitle">— 素材の瞬きを、あなたの食卓へ —</p>
+  </div>
+  <div class="hero-scroll">
+    <span>SCROLL</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- CONCEPT -->
+<section class="concept" id="concept">
+  <div class="concept-text">
+    <p class="section-label">Our Story</p>
+    <h2>一皿に宿る、<br>季節の記憶</h2>
+    <p>
+      旬を知り、土地を知り、作り手の想いを知る。<br>
+      煌では全国の生産者と直接契約を結び、その日に届いた素材だけを丁寧に仕上げます。
+    </p>
+    <p>
+      料理長・田中啓一が和の技法に現代のエスプリを重ね、驚きと懐かしさが同居する一皿を毎夜お届けします。
+    </p>
+    <p>
+      お酒は日本全国47蔵から選び抜いた純米大吟醸を中心に、季節のペアリングでご提案いたします。
+    </p>
+  </div>
+  <div class="concept-visual">
+    <div class="concept-accent"></div>
+    <div class="concept-img">
+      <div class="concept-img-inner">
+        <div class="dish-icon">🍱</div>
+        <span class="dish-label">Seasonal Omakase</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="divider">
+  <div class="divider-line"></div>
+  <span class="divider-kanji">膳</span>
+  <div class="divider-line"></div>
+</div>
+
+<!-- MENU -->
+<section class="menu-section" id="menu">
+  <div class="section-header">
+    <span class="section-label">Seasonal Menu</span>
+    <h2>旬の一品</h2>
+  </div>
+  <div class="menu-tabs">
+    <button class="menu-tab active">前菜</button>
+    <button class="menu-tab">焼き物</button>
+    <button class="menu-tab">鍋・蒸し物</button>
+    <button class="menu-tab">〆料理</button>
+  </div>
+  <div class="menu-grid">
+    <div class="menu-item">
+      <div class="menu-item-info">
+        <div class="menu-item-name">白烏賊の塩造り</div>
+        <div class="menu-item-desc">富山産白烏賊・柚子塩・新玉葱のジュレ</div>
+      </div>
+      <div class="menu-item-price">¥1,200</div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-info">
+        <div class="menu-item-name">旬魚の炙りカルパッチョ</div>
+        <div class="menu-item-desc">本日の鮮魚・浅葱・フルーツトマト</div>
+      </div>
+      <div class="menu-item-price">¥1,500</div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-info">
+        <div class="menu-item-name">鴨ロースト 南蛮漬け仕立て</div>
+        <div class="menu-item-desc">秋田産合鴨・京野菜・三杯酢</div>
+      </div>
+      <div class="menu-item-price">¥1,800</div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-info">
+        <div class="menu-item-name">黒毛和牛のたたき</div>
+        <div class="menu-item-desc">宮崎産A5和牛・土佐醤油・おろし山葵</div>
+      </div>
+      <div class="menu-item-price">¥2,400</div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-info">
+        <div class="menu-item-name">焼き茄子と雲丹</div>
+        <div class="menu-item-desc">能登直送バフン雲丹・賀茂茄子・土佐酢ジュレ</div>
+      </div>
+      <div class="menu-item-price">¥2,000</div>
+    </div>
+    <div class="menu-item">
+      <div class="menu-item-info">
+        <div class="menu-item-name">本日のお刺身 三種盛り</div>
+        <div class="menu-item-desc">天然まぐろ・鯛・ほたて / 本わさび添え</div>
+      </div>
+      <div class="menu-item-price">¥2,800</div>
+    </div>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="divider">
+  <div class="divider-line"></div>
+  <span class="divider-kanji">酒</span>
+  <div class="divider-line"></div>
+</div>
+
+<!-- SAKE -->
+<section class="sake-section" id="sake">
+  <div class="sake-visual">
+    <div class="sake-cell">
+      <span class="emoji">🍶</span>
+      <div class="name">獺祭 二割三分</div>
+      <div class="origin">山口・旭酒造</div>
+    </div>
+    <div class="sake-cell">
+      <span class="emoji">🍺</span>
+      <div class="name">久保田 萬寿</div>
+      <div class="origin">新潟・朝日酒造</div>
+    </div>
+    <div class="sake-cell">
+      <span class="emoji">🥃</span>
+      <div class="name">而今 特別純米</div>
+      <div class="origin">三重・木屋正酒造</div>
+    </div>
+    <div class="sake-cell">
+      <span class="emoji">🍵</span>
+      <div class="name">飛露喜 純米大吟醸</div>
+      <div class="origin">福島・廣木酒造</div>
+    </div>
+  </div>
+  <div class="sake-text">
+    <span class="section-label">Sake Selection</span>
+    <h2>蔵元直送、<br>四十七の物語</h2>
+    <p>
+      酒は料理の引き立て役でもあり、主役でもある。<br>
+      ソムリエ資格を持つ日本酒担当が全国の蔵を訪れ、味、香り、造り手の人柄まで確かめた一本を常時40種以上ご用意しています。
+    </p>
+    <p>
+      季節の料理にあわせた「ペアリングコース」では、一杯ごとに物語をお伝えしながらご提案いたします。
+    </p>
+  </div>
+</section>
+
+<!-- ACCESS -->
+<section class="access-section" id="access">
+  <div class="access-inner">
+    <div class="access-text">
+      <span class="section-label">Access & Hours</span>
+      <h2>お店へのご案内</h2>
+      <dl class="access-info">
+        <dt>住所</dt>
+        <dd>東京都港区西麻布 2-24-12<br>KIRAビル 2F</dd>
+        <dt>電話</dt>
+        <dd>03-0000-0000</dd>
+        <dt>営業時間</dt>
+        <dd>火〜日 18:00 – 24:00（L.O. 23:00）<br>月曜定休</dd>
+        <dt>アクセス</dt>
+        <dd>六本木駅より徒歩7分<br>広尾駅より徒歩10分</dd>
+      </dl>
+    </div>
+    <div class="access-map">
+      <div class="map-grid"></div>
+      <div class="map-placeholder">
+        <div class="pin">📍</div>
+        <p>西麻布 2-24-12</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESERVE -->
+<section class="reserve-section" id="reserve">
+  <p class="eyebrow">Reservation</p>
+  <h2>ご予約</h2>
+  <p>
+    おまかせコースは完全予約制です。<br>
+    アレルギー・ご要望はご予約時にお知らせください。
+  </p>
+  <a href="mailto:info@kira-tokyo.jp" class="reserve-btn">Web予約はこちら</a>
+  <p class="reserve-tel">03-0000-0000</p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">煌 -kira-</div>
+  <ul class="footer-links">
+    <li><a href="#concept">コンセプト</a></li>
+    <li><a href="#menu">メニュー</a></li>
+    <li><a href="#access">アクセス</a></li>
+    <li><a href="#reserve">ご予約</a></li>
+  </ul>
+  <p class="footer-copy">© 2026 煌 -kira-. All rights reserved.</p>
+</footer>
+
+<script>
+  // Menu tab switching
+  const tabs = document.querySelectorAll('.menu-tab');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+    });
+  });
+
+  // Scroll reveal (lightweight)
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.concept, .menu-section, .sake-section, .access-section, .reserve-section')
+    .forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(30px)';
+      el.style.transition = 'opacity .8s ease, transform .8s ease';
+      observer.observe(el);
+    });
+</script>
+
+</body>
+</html>
